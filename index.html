@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>株式会社NEXTPUBLIC - 至高のラグジュアリーエクスペリエンス</title>
+
+    <!-- Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/playfair-
+display@1.0.0/index.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/
+bodoni-moda/index.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/
+didot@4.5.11/index.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/avenir-
+next@1.0.13/index.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/
+helvetica-neue@4.5.0/index.css"
+    />
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/
+tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- GSAP for animations -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/
+ScrollTrigger.min.js"></script>
+
+    <!-- Three.js for 3D effects -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/
+three.min.js"></script>
+
+    <!-- Custom styling -->
+    <style>
+      /* Custom cursor */
+      body {
+        cursor: none;
+        background-color: #000000;
+        color: #ffffff;
+        font-family: 'Helvetica Neue', 'Avenir Next', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      .cursor {
+        width: 20px;
+        height: 20px;
+        border: 1px solid #d4af37;
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition: transform 0.1s ease;
+        z-index: 9999;
+        mix-blend-mode: difference;
+      }
+
+      .cursor-dot {
+        width: 5px;
+        height: 5px;
+        background-color: #d4af37;
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+      }
+
+      /* Typography */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        font-family: 'Didot', 'Bodoni Moda', 'Playfair Display', serif;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: 5rem;
+        margin-bottom: 2rem;
+        font-weight: 200;
+        letter-spacing: 0.12em;
+      }
+
+      h2 {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 300;
+      }
+
+      h3 {
+        font-size: 2.5rem;
+        margin-bottom: 1.2rem;
+      }
+
+      p {
+        font-weight: 300;
+        letter-spacing: 0.05em;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Luxury elements */
+      .gold-text {
+        color: #d4af37;
+        text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+      }
+
+      .gold-gradient {
+        background: linear-gradient(135deg, #d4af37 0%, #cd7f32 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .gold-border {
+        border: 1px solid #d4af37;
+      }
+
+      .luxury-section {
+        min-height: 100vh;
+        padding: 10vh 5vw;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://cdn.jsdelivr.net/gh/matt-curtis/noise-
+overlay@master/noise.png');
+        opacity: 0.03;
+        pointer-events: none;
+        z-index: 9000;
+      }
+
+      /* Navigation */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 2rem 5vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        transition: background-color 0.3s ease;
+      }
+
+      .navbar.scrolled {
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+      }
+
+      .nav-logo {
+        font-family: 'Didot', serif;
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+        color: #d4af37;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 3rem;
+      }
+
+      .nav-link {
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 300;
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: white;
+        text-decoration: none;
+        position: relative;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #d4af37;
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: #d4af37;
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* Hero section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background-color: black;
+        position: relative;
+      }
+
+      .hero-content {
+        z-index: 10;
+        max-width: 80%;
+      }
+
+      .hero-subtitle {
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 300;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+      }
+
+      .hero-title {
+        margin-bottom: 2rem;
+        line-height: 1.2;
+      }
+
+      .hero-description {
+        max-width: 40rem;
+        margin: 0 auto;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 300;
+      }
+
+      /* Product/Service Section */
+      .product-service {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 15vh 10vw;
+      }
+
+      .product-display {
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        margin: 5rem 0;
+        overflow: hidden;
+        border-radius: 2px;
+      }
+
+      .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 100%);
+        display: flex;
+        align-items: center;
+        padding-left: 10%;
+      }
+
+      .product-text {
+        max-width: 40%;
+      }
+
+      /* Philosophy Section */
+      .philosophy {
+        text-align: center;
+        padding: 15vh 20vw;
+      }
+
+      .philosophy-quote {
+        font-family: 'Didot', serif;
+        font-size: 2.5rem;
+        line-height: 1.5;
+        margin: 5rem 0;
+        color: #d4af37;
+        font-style: italic;
+        position: relative;
+      }
+
+      .philosophy-quote::before,
+      .philosophy-quote::after {
+        content: '"';
+        font-size: 5rem;
+        position: absolute;
+        color: rgba(212, 175, 55, 0.2);
+      }
+
+      .philosophy-quote::before {
+        top: -3rem;
+        left: -3rem;
+      }
+
+      .philosophy-quote::after {
+        bottom: -5rem;
+        right: -3rem;
+      }
+
+      /* Team Section */
+      .team {
+        padding: 15vh 10vw;
+      }
+
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5rem;
+        margin-top: 5rem;
+      }
+
+      .team-member {
+        text-align: center;
+      }
+
+      .team-photo {
+        width: 100%;
+        aspect-ratio: 1/1.2;
+        object-fit: cover;
+        margin-bottom: 2rem;
+        filter: grayscale(100%);
+        transition: filter 0.5s ease;
+      }
+
+      .team-member:hover .team-photo {
+        filter: grayscale(0%);
+      }
+
+      .team-name {
+        font-family: 'Didot', serif;
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .team-position {
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 300;
+        font-size: 0.9rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #d4af37;
+        margin-bottom: 1rem;
+      }
+
+      /* Contact Section */
+      .contact {
+        padding: 15vh 10vw;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .contact-info {
+        width: 40%;
+      }
+
+      .contact-form {
+        width: 50%;
+      }
+
+      .form-group {
+        margin-bottom: 2rem;
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 1rem 0;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 300;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: #d4af37;
+      }
+
+      .form-textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .form-button {
+        background-color: transparent;
+        border: 1px solid #d4af37;
+        color: #d4af37;
+        padding: 1rem 3rem;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 300;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .form-button:hover {
+        background-color: #d4af37;
+        color: black;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 5rem 5vw;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+      }
+
+      .footer-logo {
+        font-family: 'Didot', serif;
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+        color: #d4af37;
+        margin-bottom: 2rem;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .footer-link {
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 300;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-link:hover {
+        color: #d4af37;
+      }
+
+      .footer-copyright {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* 3D Canvas */
+      #webgl-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* Parallax elements */
+      .parallax {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .parallax-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        will-change: transform;
+      }
+
+      /* Animation classes */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 1s ease, transform 1s ease;
+      }
+
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 3rem;
+        }
+
+        h2 {
+          font-size: 2.5rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .product-overlay {
+          padding: 0 5%;
+        }
+
+        .product-text {
+          max-width: 90%;
+        }
+
+        .philosophy {
+          padding: 10vh 10vw;
+        }
+
+        .team-grid {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+        }
+
+        .contact {
+          flex-direction: column;
+        }
+
+        .contact-info,
+        .contact-form {
+          width: 100%;
+        }
+
+        .contact-info {
+          margin-bottom: 5rem;
+        }
+      }
+
+      /* Gold texture */
+      .gold-texture {
+        background: linear-gradient(135deg, #d4af37 0%, #cd7f32 100%);
+        opacity: 0.7;
+        background-size: 200% 200%;
+        animation: shimmer 10s infinite linear;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: 0% 0%;
+        }
+        50% {
+          background-position: 100% 100%;
+        }
+        100% {
+          background-position: 0% 0%;
+        }
+      }
+
+      /* Breathing animation */
+      .breathing {
+        animation: breathing 8s infinite ease-in-out;
+      }
+
+      @keyframes breathing {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Gold button */
+      .gold-button {
+        position: relative;
+        display: inline-block;
+        padding: 15px 40px;
+        background: transparent;
+        border: 1px solid #d4af37;
+        color: #d4af37;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-size: 14px;
+        overflow: hidden;
+        transition: color 0.3s ease;
+        cursor: pointer;
+        margin-top: 30px;
+      }
+
+      .gold-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #d4af37 0%, #cd7f32 100%);
+        transition: transform 0.5s ease;
+        z-index: -1;
+      }
+
+      .gold-button:hover {
+        color: #000000;
+      }
+
+      .gold-button:hover::before {
+        transform: translateX(100%);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Custom cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Noise overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- WebGL canvas for 3D effects -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-logo">NEXTPUBLIC</div>
+      <div class="nav-links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#philosophy" class="nav-link">Philosophy</a>
+        <a href="#team" class="nav-link">Team</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero luxury-section" id="hero">
+      <div class="hero-content">
+        <p class="hero-subtitle fade-in">株式会社NEXTPUBLIC</p>
+        <h1 class="hero-title gold-texture fade-in">世界を<br />シンプルに</h1>
+        <p class="hero-description fade-in">医療と技術の融合で､ 未来の医療サー ビスを再定義する</p>
+        <a href="#services" class="gold-button fade-in">探索する</a>
+      </div>
+    </section>
+
+    <!-- Product/Service Section -->
+    <section class="product-service luxury-section" id="services">
+      <h2 class="gold-text fade-in">医療の未来を<br />デザインする</h2>
+      <p
+        class="fade-in"
+        style="max-width: 50%; text-align: center; margin-
+bottom: 5rem;"
+      >
+        NEXTPUBLIC は､ 細谷内科医院と連携し､ 訪問診療の中核を担うMSC 娔医療ソ
+        ーシャルコーディネーター娘の業務を支援する革新的なツールを開発しました｡
+      </p>
+
+      <div class="product-display fade-in">
+        <img
+          src="https://images.stockcake.com/public/d/7/f/d7f4e40c-
+bf28-48e9-b3ae-ac095a33de54_large/advanced-medical-visualization-
+stockcake.jpg"
+          alt="Advanced Medical Interface"
+          class="product-image"
+        />
+        <div class="product-overlay">
+          <div class="product-text">
+            <h3 class="gold-gradient">MSC 支援ツール</h3>
+            <p>
+              医療専門家が患者と医師の間のコミュニケーションを円滑にし､ より効
+              果的な医療ケアを提供するための革新的なインターフェース｡
+            </p>
+            <p>直感的な操作性と高度な分析機能を組み合わせ､ 医療従事者の業務効率 を高めます｡</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-display fade-in">
+        <img
+          src="https://www.dicomdirector.com/wp-content/uploads/2021/05/
+advanced-visualization-technology-1364x682.jpeg"
+          alt="Medical Technology"
+          class="product-image"
+        />
+        <div class="product-overlay">
+          <div class="product-text">
+            <h3 class="gold-gradient">未来技術の統合</h3>
+            <p>
+              AI 支援による診断サポート､ リアルタイムデータ分析､ 直感的なビジュ
+              アライゼーションを統合したプラットフォーム｡
+            </p>
+            <p>医療プロフェッショナルに必要な情報を､ 必要なときに､ 最も効果的な 形で提供します｡</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="philosophy luxury-section" id="philosophy">
+      <h2 class="gold-text fade-in">Our Philosophy</h2>
+      <p class="fade-in">
+        私たちは､ テクノロジーの力で医療の未来を再構築し､ 患者
+        と医療提供者の両方にとってより良い世界を創造することを目指しています｡
+      </p>
+
+      <div class="philosophy-quote fade-in">
+        複雑さを削ぎ落とし､ 本質だけを残すことで､ <br />世界はよりシンプルに､ より 美しくなる
+      </div>
+
+      <p class="fade-in">
+        NEXTPUBLIC は､｢世界をシンプルに｣という理念のもと､ 医 療現場の複雑な課題に対して､
+        洗練されたシンプルなソリューションを提供します｡ 私た ちの技術は､ 複雑さを隠し､
+        必要なものだけを提示することで､ 医療従事者が本来の仕事 に集中できる環境を作り出します｡
+      </p>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team luxury-section" id="team">
+      <h2 class="gold-text fade-in">Our Team</h2>
+      <p class="fade-in" style="max-width: 50%; margin: 0 auto; text-align: center">
+        医療とテクノロジーの専門家が集結し､ 未来の医療サービスを創造しています｡
+      </p>
+
+      <div class="team-grid">
+        <div class="team-member fade-in">
+          <img
+            src="https://www.denverheadshotco.com/wp-content/uploads/
+2023/06/Denver-Headshot-Co-0243-SMALL.jpg"
+            alt="Team Member"
+            class="team-photo"
+          />
+          <h3 class="team-name">鈴木 健太郎</h3>
+          <p class="team-position">CEO & Founder</p>
+          <p>
+            医療IT の専門家として15 年以上の経験を持ち､ 複数のヘルステック企業の 立ち上げに携わる｡
+            医療とテクノロジーの融合による新しい価値の創造に情熱を注いでい る｡
+          </p>
+        </div>
+
+        <div class="team-member fade-in">
+          <img
+            src="https://prophotos.ai/wp-content/uploads/2024/02/
+health-2-1024x574.webp"
+            alt="Team Member"
+            class="team-photo"
+          />
+          <h3 class="team-name">佐藤 美咲</h3>
+          <p class="team-position">Chief Medical Officer</p>
+          <p>
+            内科医として10 年間の臨床経験を持ち､ 訪問診療のスペシャリスト｡ 患者
+            と医療提供者の間のギャップを埋めるテクノロジーの可能性に魅了され､ NEXTPUBLIC に参画｡
+          </p>
+        </div>
+
+        <div class="team-member fade-in">
+          <img
+            src="https://capturely.com/wp-content/uploads/
+Doctor-1-1.webp"
+            alt="Team Member"
+            class="team-photo"
+          />
+          <h3 class="team-name">田中 哲也</h3>
+          <p class="team-position">CTO</p>
+          <p>
+            AI と機械学習の専門家｡ 複数のテクノロジー企業でエンジニアリングリー ダーを務めた後､
+            医療の未来を変えるというミッションに共感し､ NEXTPUBLIC の技術 部門を率いる｡
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact luxury-section" id="contact">
+      <div class="contact-info fade-in">
+        <h2 class="gold-text">Contact</h2>
+        <p>私たちのサービスや協業の可能性について､ お気軽にお問い合わせくださ い｡</p>
+
+        <div style="margin-top: 3rem">
+          <p>
+            <strong class="gold-text">Address</strong><br />
+            秋田県横手市前郷二番町7 －8
+          </p>
+
+          <p>
+            <strong class="gold-text">Email</strong><br />
+            info@nextpublic.jp
+          </p>
+
+          <p>
+            <strong class="gold-text">Phone</strong><br />
+            +81 (0)3-XXXX-XXXX
+          </p>
+        </div>
+      </div>
+
+      <div class="contact-form fade-in">
+        <form action="#" method="POST">
+          <div class="form-group">
+            <label for="name" class="form-label">お名前</label>
+            <input type="text" id="name" name="name" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">メールアドレス</label>
+            <input type="email" id="email" name="email" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="message" class="form-label">メッセージ</label>
+            <textarea id="message" name="message" class="form-textarea" required></textarea>
+          </div>
+
+          <button type="submit" class="form-button">送信する</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-logo">NEXTPUBLIC</div>
+
+      <div class="footer-links">
+        <a href="#about" class="footer-link">About</a>
+        <a href="#services" class="footer-link">Services</a>
+        <a href="#philosophy" class="footer-link">Philosophy</a>
+        <a href="#team" class="footer-link">Team</a>
+        <a href="#contact" class="footer-link">Contact</a>
+      </div>
+
+      <p class="footer-copyright">© 2025 株式会社NEXTPUBLIC. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+
+        document.addEventListener('mousemove', function (e) {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+
+          cursorDot.style.left = e.clientX + 'px';
+          cursorDot.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', function () {
+          cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        });
+
+        document.addEventListener('mouseup', function () {
+          cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+
+        // Scroll trigger for navbar
+        window.addEventListener('scroll', function () {
+          const navbar = document.querySelector('.navbar');
+          if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+          } else {
+            navbar.classList.remove('scrolled');
+          }
+        });
+
+        // Fade in elements on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+          }
+        );
+
+        fadeElements.forEach((element) => {
+          observer.observe(element);
+        });
+
+        // Initialize GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Parallax effect
+        gsap.utils.toArray('.product-display').forEach((section) => {
+          const image = section.querySelector('.product-image');
+
+          gsap.to(image, {
+            y: 100,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+            },
+          });
+        });
+
+        // 3D Background with Three.js
+        const canvas = document.getElementById('webgl-canvas');
+        const renderer = new THREE.WebGLRenderer({
+          canvas,
+          alpha: true,
+        });
+
+        const sizes = {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+
+        renderer.setSize(sizes.width, sizes.height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
+        camera.position.z = 5;
+        scene.add(camera);
+
+        // Create particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const count = 2000;
+
+        const positions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+
+        for (let i = 0; i < count * 3; i++) {
+          positions[i] = (Math.random() - 0.5) * 20;
+          colors[i] = Math.random();
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+          size: 0.05,
+          sizeAttenuation: true,
+          color: 0xd4af37,
+          transparent: true,
+          opacity: 0.5,
+          blending: THREE.AdditiveBlending,
+        });
+
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+
+        // Animation
+        const clock = new THREE.Clock();
+
+        const animate = () => {
+          const elapsedTime = clock.getElapsedTime();
+
+          particles.rotation.y = elapsedTime * 0.05;
+          particles.rotation.x = elapsedTime * 0.03;
+
+          renderer.render(scene, camera);
+          window.requestAnimationFrame(animate);
+        };
+
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+          // Update sizes
+          sizes.width = window.innerWidth;
+          sizes.height = window.innerHeight;
+
+          // Update camera
+          camera.aspect = sizes.width / sizes.height;
+          camera.updateProjectionMatrix();
+
+          // Update renderer
+          renderer.setSize(sizes.width, sizes.height);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth',
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
